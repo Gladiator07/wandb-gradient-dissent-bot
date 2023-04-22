@@ -161,3 +161,4 @@ cython_debug/
 notebooks/
 downloaded_data/
 wandb/
+.vscode/
