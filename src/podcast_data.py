@@ -1,4 +1,3 @@
-import logging
 import time
 from dataclasses import asdict
 
@@ -9,8 +8,6 @@ from tqdm import tqdm
 
 import wandb
 from config import config
-
-logger = logging.getLogger(__name__)
 
 
 def retry_access_yt_object(url, max_retries=5, interval_secs=5):
@@ -28,7 +25,7 @@ def retry_access_yt_object(url, max_retries=5, interval_secs=5):
             return yt  # Return the YouTube object if successful.
         except Exception as err:
             last_exception = err  # Keep track of the last exception raised.
-            logger.warning(
+            print(
                 f"Failed to create YouTube object or access title. Retrying... ({i+1}/{max_retries})"
             )
             time.sleep(interval_secs)  # Wait for the specified interval before retrying.
@@ -43,7 +40,7 @@ if __name__ == "__main__":
     playlist = Playlist(config.playlist_url)
     playlist_video_urls = playlist.video_urls
 
-    logger.info(f"There are total {len(playlist_video_urls)} videos in the playlist.")
+    print(f"There are total {len(playlist_video_urls)} videos in the playlist.")
 
     video_data = []
     for video in tqdm(playlist_video_urls, total=len(playlist_video_urls)):
@@ -61,9 +58,9 @@ if __name__ == "__main__":
             curr_video_data["total_words"] = len(transcript.split())
             video_data.append(curr_video_data)
         except:
-            logger.warning(f"Failed to scrape {video}")
+            print(f"Failed to scrape {video}")
 
-    logger.info(f"Total podcast episodes scraped: {len(video_data)}")
+    print(f"Total podcast episodes scraped: {len(video_data)}")
 
     df = pd.DataFrame(video_data)
     df.to_csv(config.yt_scraped_data_path, index=False)

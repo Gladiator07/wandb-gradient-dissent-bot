@@ -1,4 +1,3 @@
-import logging
 import os
 from dataclasses import asdict
 
@@ -14,8 +13,6 @@ from tqdm import tqdm
 from wandb.integration.langchain import WandbTracer
 
 from config import config
-
-logger = logging.getLogger(__name__)
 
 
 def get_data(
@@ -38,7 +35,7 @@ def summarize_episode(episode_df: pd.DataFrame):
     # split the documents
     text_splitter = TokenTextSplitter.from_tiktoken_encoder(chunk_size=1000, chunk_overlap=0)
     docs = text_splitter.split_documents(data)
-    logger.info(f"Number of documents for podcast {data[0].metadata['title']}: {len(docs)}")
+    print(f"Number of documents for podcast {data[0].metadata['title']}: {len(docs)}")
 
     # initialize LLM
     llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
@@ -98,12 +95,9 @@ if __name__ == "__main__":
             summary = summarize_episode(episode_data)
             summaries.append(summary["output_text"])
 
-        logger.info("*" * 25)
-        logger.info(f"Total prompt tokens: {cb.prompt_tokens}")
-        logger.info(f"Total completion tokens: {cb.completion_tokens}")
-        logger.info(f"Total tokens: {cb.total_tokens}")
-        logger.info(f"Total cost (USD): ${cb.total_cost}")
-        logger.info("*" * 25)
+        print("*" * 25)
+        print(cb)
+        print("*" * 25)
 
         wandb.log(
             {

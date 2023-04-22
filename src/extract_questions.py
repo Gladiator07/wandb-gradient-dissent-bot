@@ -86,10 +86,7 @@ if __name__ == "__main__":
             questions.append(episode_questions)
 
         print("*" * 25)
-        print(f"Total prompt tokens: {cb.prompt_tokens}")
-        print(f"Total completion tokens: {cb.completion_tokens}")
-        print(f"Total tokens: {cb.total_tokens}")
-        print(f"Total cost (USD): ${cb.total_cost}")
+        print(cb)
         print("*" * 25)
 
         wandb.log(
