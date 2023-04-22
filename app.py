@@ -11,16 +11,11 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 
-df_path = "/Users/atharva/Work/W&B/gradient_dissent_qa_bot/data/summary_que_data.csv"
-chromadb_dir = "/Users/atharva/Work/W&B/gradient_dissent_qa_bot/downloaded_data/chromadb"
+df_path = "data/summary_que_data.csv"
+chromadb_dir = "data/chromadb"
 
 
 df = pd.read_csv(df_path)
-
-
-def iframe_video(video_id: str):
-    html = f"<iframe width='580' height='315' src=https://www.youtube.com/embed/{video_id} frameborder='0' allowfullscreen></iframe>"
-    return html
 
 
 def embed_video(title: str):
