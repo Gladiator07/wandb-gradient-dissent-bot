@@ -46,10 +46,10 @@ if __name__ == "__main__":
     for video in tqdm(playlist_video_urls, total=len(playlist_video_urls)):
         try:
             curr_video_data = {}
-            yt = retry_access_yt_object(video, max_retries=20, interval_secs=2)
+            yt = retry_access_yt_object(video, max_retries=25, interval_secs=2)
             curr_video_data["title"] = yt.title
             curr_video_data["url"] = video
-            curr_video_data["length"] = yt.length
+            curr_video_data["duration"] = yt.length
             curr_video_data["publish_date"] = yt.publish_date.strftime("%Y-%m-%d")
             loader = YoutubeLoader.from_youtube_url(video)
             transcript = loader.load()[0].page_content
@@ -64,11 +64,15 @@ if __name__ == "__main__":
 
     # save the scraped data to a csv file
     df = pd.DataFrame(video_data)
-    df.to_csv(config.root_data_dir / "yt_podcast_transcript.csv", index=False)
+    data_path = config.root_data_dir / "yt_podcast_transcript.csv"
+    df.to_csv(data_path, index=False)
 
     # upload the scraped data to wandb
     artifact = wandb.Artifact("yt_podcast_transcript", type="dataset")
-    artifact.add_file(config.yt_scraped_data_path)
+    artifact.add_file(data_path)
     run.log_artifact(artifact)
 
+    # create wandb table
+    table = wandb.Table(dataframe=df)
+    run.log({"yt_podcast_transcript": table})
     run.finish()
