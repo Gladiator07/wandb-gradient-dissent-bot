@@ -13,8 +13,10 @@ class Config:
     # wandb
     project_name: str = "gradient_dissent_qabot"
     yt_podcast_data_artifact: str = "gladiator/gradient_dissent_qabot/yt_podcast_transcript:latest"
-    # summarized_data_artifact: str = "gladiator/gradient_dissent_bot/summary_data:latest"
-    # summarized_que_data_artifact: str = "gladiator/gradient_dissent_bot/summary_que_data:latest"
+    summarized_data_artifact: str = "gladiator/gradient_dissent_bot/summarized_podcasts:latest"
+    summarized_que_data_artifact: str = (
+        "gladiator/gradient_dissent_bot/summarized_que_podcasts:latest"
+    )
 
 
 config = Config()

@@ -16,11 +16,13 @@ import wandb
 from config import config
 
 
-def get_data(artifact_name: str = "gladiator/gradient_dissent_bot/summary_data:latest"):
+def get_data(artifact_name: str, total_episodes: int = None):
     podcast_artifact = wandb.use_artifact(artifact_name, type="dataset")
     podcast_artifact_dir = podcast_artifact.download(config.root_data_dir)
     filename = artifact_name.split(":")[0].split("/")[-1]
     df = pd.read_csv(os.path.join(podcast_artifact_dir, f"{filename}.csv"))
+    if total_episodes is not None:
+        df = df.iloc[:total_episodes]
     return df
 
 
@@ -66,7 +68,6 @@ if __name__ == "__main__":
     WandbTracer.init(
         {
             "project": "gradient_dissent_bot",
-            "name": "extract_questions",
             "job_type": "extract_questions",
             "config": asdict(config),
         }
@@ -101,14 +102,15 @@ if __name__ == "__main__":
     df["questions"] = questions
 
     # log to wandb artifact
-    path_to_save = os.path.join(config.root_data_dir, "summary_que_data.csv")
+    path_to_save = os.path.join(config.root_data_dir, "summarized_que_podcasts.csv")
     df.to_csv(path_to_save, index=False)
-    artifact = wandb.Artifact("summary_que_data", type="dataset")
+    artifact = wandb.Artifact("summarized_que_podcasts", type="dataset")
     artifact.add_file(path_to_save)
     wandb.log_artifact(artifact)
 
     # create wandb table
+    df["questions"] = df["questions"].apply(lambda x: "\n".join(x))
     table = wandb.Table(dataframe=df)
-    wandb.log({"summary_que_data": table})
+    wandb.log({"summarized_que_podcasts": table})
 
     WandbTracer.finish()

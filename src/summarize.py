@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
     # save data
     path_to_save = os.path.join(config.root_data_dir, "summarized_podcasts.csv")
-    df.to_csv(path_to_save)
+    df.to_csv(path_to_save, index=False)
 
     # log to wandb artifact
     artifact = wandb.Artifact("summarized_podcasts", type="dataset")
