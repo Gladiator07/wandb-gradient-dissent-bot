@@ -2,11 +2,11 @@ import time
 from dataclasses import asdict
 
 import pandas as pd
+import wandb
 from langchain.document_loaders import YoutubeLoader
 from pytube import Playlist, YouTube
 from tqdm import tqdm
 
-import wandb
 from config import config
 
 
@@ -35,7 +35,7 @@ def retry_access_yt_object(url, max_retries=5, interval_secs=5):
 
 
 if __name__ == "__main__":
-    run = wandb.init(project="gradient_dissent_bot", job_type="dataset", config=asdict(config))
+    run = wandb.init(project=config.project_name, job_type="dataset", config=asdict(config))
 
     playlist = Playlist(config.playlist_url)
     playlist_video_urls = playlist.video_urls
@@ -62,10 +62,12 @@ if __name__ == "__main__":
 
     print(f"Total podcast episodes scraped: {len(video_data)}")
 
+    # save the scraped data to a csv file
     df = pd.DataFrame(video_data)
-    df.to_csv(config.yt_scraped_data_path, index=False)
+    df.to_csv(config.root_data_dir / "yt_podcast_transcript.csv", index=False)
 
-    artifact = wandb.Artifact("yt_podcast_data", type="dataset")
+    # upload the scraped data to wandb
+    artifact = wandb.Artifact("yt_podcast_transcript", type="dataset")
     artifact.add_file(config.yt_scraped_data_path)
     run.log_artifact(artifact)
 
