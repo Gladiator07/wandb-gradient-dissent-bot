@@ -67,7 +67,7 @@ if __name__ == "__main__":
     # initialize wandb tracer
     WandbTracer.init(
         {
-            "project": "gradient_dissent_bot",
+            "project": config.project_name,
             "job_type": "extract_questions",
             "config": asdict(config),
         }
