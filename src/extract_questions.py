@@ -18,7 +18,7 @@ from config import config
 
 def get_data(artifact_name: str, total_episodes: int = None):
     podcast_artifact = wandb.use_artifact(artifact_name, type="dataset")
-    podcast_artifact_dir = podcast_artifact.download(config.root_data_dir)
+    podcast_artifact_dir = podcast_artifact.download(config.root_artifact_dir)
     filename = artifact_name.split(":")[0].split("/")[-1]
     df = pd.read_csv(os.path.join(podcast_artifact_dir, f"{filename}.csv"))
     if total_episodes is not None:
