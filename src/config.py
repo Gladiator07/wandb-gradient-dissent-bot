@@ -8,11 +8,13 @@ class Config:
 
     # paths
     root_data_dir: Path = Path("data")
+    root_artifact_dir: Path = Path("downloaded_artifacts")
+
     # wandb
     project_name: str = "gradient_dissent_qabot"
-    yt_podcast_data_artifact: str = "gladiator/gradient_dissent_bot/yt_podcast_data:latest"
-    summarized_data_artifact: str = "gladiator/gradient_dissent_bot/summary_data:latest"
-    summarized_que_data_artifact: str = "gladiator/gradient_dissent_bot/summary_que_data:latest"
+    yt_podcast_data_artifact: str = "gladiator/gradient_dissent_qabot/yt_podcast_transcript:latest"
+    # summarized_data_artifact: str = "gladiator/gradient_dissent_bot/summary_data:latest"
+    # summarized_que_data_artifact: str = "gladiator/gradient_dissent_bot/summary_que_data:latest"
 
 
 config = Config()

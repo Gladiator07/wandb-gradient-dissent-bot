@@ -162,3 +162,4 @@ notebooks/
 downloaded_data/
 wandb/
 .vscode/
+downloaded_artifacts/

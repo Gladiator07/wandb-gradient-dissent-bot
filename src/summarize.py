@@ -2,7 +2,6 @@ import os
 from dataclasses import asdict
 
 import pandas as pd
-import wandb
 from langchain.callbacks import get_openai_callback
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
@@ -12,16 +11,15 @@ from langchain.text_splitter import TokenTextSplitter
 from tqdm import tqdm
 from wandb.integration.langchain import WandbTracer
 
+import wandb
 from config import config
 
 
-def get_data(
-    artifact_name: str = "gladiator/gradient_dissent_bot/yt_podcast_data:latest",
-    total_episodes: int = None,
-):
+def get_data(artifact_name: str, total_episodes: int = None):
     podcast_artifact = wandb.use_artifact(artifact_name, type="dataset")
-    podcast_artifact_dir = podcast_artifact.download(config.root_data_dir)
-    df = pd.read_csv(os.path.join(podcast_artifact_dir, "yt_data.csv"))
+    podcast_artifact_dir = podcast_artifact.download(config.root_artifact_dir)
+    filename = artifact_name.split(":")[0].split("/")[-1]
+    df = pd.read_csv(os.path.join(podcast_artifact_dir, f"{filename}.csv"))
     if total_episodes is not None:
         df = df.iloc[:total_episodes]
     return df
@@ -77,15 +75,14 @@ if __name__ == "__main__":
     # initialize wandb tracer
     WandbTracer.init(
         {
-            "project": "gradient_dissent_bot",
-            "name": "summarize_3",
+            "project": config.project_name,
             "job_type": "summarize",
             "config": asdict(config),
         }
     )
 
     # get scraped data
-    df = get_data(artifact_name=config.yt_podcast_data_artifact, total_episodes=3)
+    df = get_data(artifact_name=config.yt_podcast_data_artifact, total_episodes=2)
 
     summaries = []
     with get_openai_callback() as cb:
@@ -110,15 +107,17 @@ if __name__ == "__main__":
 
     df["summary"] = summaries
 
-    # log to wandb artifact
-    path_to_save = os.path.join(config.root_data_dir, "summary_data.csv")
+    # save data
+    path_to_save = os.path.join(config.root_data_dir, "summarized_podcasts.csv")
     df.to_csv(path_to_save)
-    artifact = wandb.Artifact("summary_data", type="dataset")
+
+    # log to wandb artifact
+    artifact = wandb.Artifact("summarized_podcasts", type="dataset")
     artifact.add_file(path_to_save)
     wandb.log_artifact(artifact)
 
     # create wandb table
     table = wandb.Table(dataframe=df)
-    wandb.log({"summary_data": table})
+    wandb.log({"summarized_podcasts": table})
 
     WandbTracer.finish()
