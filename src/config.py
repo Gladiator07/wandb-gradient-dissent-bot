@@ -13,9 +13,9 @@ class Config:
     # wandb
     project_name: str = "gradient_dissent_qabot"
     yt_podcast_data_artifact: str = "gladiator/gradient_dissent_qabot/yt_podcast_transcript:latest"
-    summarized_data_artifact: str = "gladiator/gradient_dissent_bot/summarized_podcasts:latest"
+    summarized_data_artifact: str = "gladiator/gradient_dissent_qabot/summarized_podcasts:latest"
     summarized_que_data_artifact: str = (
-        "gladiator/gradient_dissent_bot/summarized_que_podcasts:latest"
+        "gladiator/gradient_dissent_qabot/summarized_que_podcasts:latest"
     )
 
 
