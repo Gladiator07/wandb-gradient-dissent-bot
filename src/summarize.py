@@ -82,7 +82,7 @@ if __name__ == "__main__":
     )
 
     # get scraped data
-    df = get_data(artifact_name=config.yt_podcast_data_artifact, total_episodes=2)
+    df = get_data(artifact_name=config.yt_podcast_data_artifact)
 
     summaries = []
     with get_openai_callback() as cb:

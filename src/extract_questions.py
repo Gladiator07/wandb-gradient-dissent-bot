@@ -74,7 +74,7 @@ if __name__ == "__main__":
     )
 
     # get data
-    df = get_data(artifact_name=config.summarized_data_artifact, total_episodes=2)
+    df = get_data(artifact_name=config.summarized_data_artifact)
 
     questions = []
     with get_openai_callback() as cb:
