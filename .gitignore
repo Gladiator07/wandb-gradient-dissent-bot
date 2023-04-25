@@ -163,3 +163,4 @@ downloaded_data/
 wandb/
 .vscode/
 downloaded_artifacts/
+data/
