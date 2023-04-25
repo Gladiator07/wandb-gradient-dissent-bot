@@ -102,6 +102,7 @@ with gr.Blocks() as demo:
     gr.Markdown(
         "#### Then ask a question about the podcast episode and click `Get Answer` to get the answer."
     )
+    gr.Markdown("<br>")
 
     with gr.Row():
         with gr.Column(scale=0.5):
