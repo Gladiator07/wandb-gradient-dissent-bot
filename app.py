@@ -2,6 +2,7 @@ import os
 import re
 from ast import literal_eval
 
+import wandb
 import gradio as gr
 import pandas as pd
 from langchain.callbacks import get_openai_callback
@@ -11,10 +12,17 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 
-df_path = "data/summary_que_data.csv"
-chromadb_dir = "data/chromadb"
+from src.config import config
 
+# download and read data
+api = wandb.Api()
+artifact_df = api.artifact(config.summarized_que_data_artifact)
+artifact_df.download(config.root_data_dir)
 
+artifact_embeddings = api.artifact(config.transcript_embeddings_artifact)
+chromadb_dir = artifact_embeddings.download(config.root_data_dir / "chromadb")
+
+df_path = artifact_df / "summarized_que_podcasts.csv"
 df = pd.read_csv(df_path)
 
 
@@ -43,7 +51,8 @@ def get_podcast_info(title: str):
 
 
 def get_answer(podcast: str, question: str):
-    db_dir = os.path.join(chromadb_dir, podcast.replace(" ", "_"))
+    index = df[df["title"] == podcast].index[0]
+    db_dir = os.path.join(chromadb_dir, str(index))
     embeddings = OpenAIEmbeddings()
     db = Chroma(persist_directory=db_dir, embedding_function=embeddings)
 
