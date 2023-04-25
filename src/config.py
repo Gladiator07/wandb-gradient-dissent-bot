@@ -17,6 +17,9 @@ class Config:
     summarized_que_data_artifact: str = (
         "gladiator/gradient_dissent_qabot/summarized_que_podcasts:latest"
     )
+    transcript_embeddings_artifact: str = (
+        "gladiator/gradient_dissent_qabot/transcript_embeddings:latest"
+    )
 
 
 config = Config()

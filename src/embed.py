@@ -14,15 +14,17 @@ import wandb
 from config import config
 
 
-def get_data(artifact_name: str = "gladiator/gradient_dissent_bot/summary_que_data:latest"):
+def get_data(artifact_name: str, total_episodes=None):
     podcast_artifact = wandb.use_artifact(artifact_name, type="dataset")
-    podcast_artifact_dir = podcast_artifact.download(config.root_data_dir)
+    podcast_artifact_dir = podcast_artifact.download(config.root_artifact_dir)
     filename = artifact_name.split(":")[0].split("/")[-1]
     df = pd.read_csv(os.path.join(podcast_artifact_dir, f"{filename}.csv"))
+    if total_episodes is not None:
+        df = df.iloc[:total_episodes]
     return df
 
 
-def create_embeddings(episode_df: pd.DataFrame):
+def create_embeddings(episode_df: pd.DataFrame, index: int):
     # load docs into langchain format
     loader = DataFrameLoader(episode_df, page_content_column="transcript")
     data = loader.load()
@@ -40,7 +42,7 @@ def create_embeddings(episode_df: pd.DataFrame):
     db = Chroma.from_documents(
         docs,
         embeddings,
-        persist_directory=os.path.join(config.chromadb_dir, title.replace(" ", "_")),
+        persist_directory=os.path.join(config.root_data_dir / "chromadb", str(index)),
     )
     db.persist()
 
@@ -49,8 +51,7 @@ if __name__ == "__main__":
     # initialize wandb tracer
     WandbTracer.init(
         {
-            "project": "gradient_dissent_bot",
-            "name": "embed_transcripts",
+            "project": config.project_name,
             "job_type": "embed_transcripts",
             "config": asdict(config),
         }
@@ -64,7 +65,7 @@ if __name__ == "__main__":
         for episode in tqdm(df.iterrows(), total=len(df), desc="Embedding transcripts"):
             episode_data = episode[1].to_frame().T
 
-            create_embeddings(episode_data)
+            create_embeddings(episode_data, index=episode[0])
 
         print("*" * 25)
         print(cb)
@@ -81,7 +82,7 @@ if __name__ == "__main__":
 
     # log embeddings to wandb artifact
     artifact = wandb.Artifact("transcript_embeddings", type="dataset")
-    artifact.add_dir(config.chromadb_dir)
+    artifact.add_dir(config.root_data_dir / "chromadb")
     wandb.log_artifact(artifact)
 
     WandbTracer.finish()
