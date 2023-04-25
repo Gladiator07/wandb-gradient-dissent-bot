@@ -31,7 +31,8 @@ def embed_video(title: str):
     match = re.search(r"v=([-\w]+)", video_url)
     video_id = match.group(1)
     # embed video
-    video_embed = f"<iframe width='560' height='315' src=https://www.youtube.com/embed/{video_id} frameborder='0' allowfullscreen></iframe>"
+    # video_embed = f"<iframe width='600' height='330' src=https://www.youtube.com/embed/{video_id} frameborder='0' allowfullscreen></iframe>"
+    video_embed = f"<iframe width='580' height='360' src=https://www.youtube.com/embed/{video_id} frameborder='0' allowfullscreen style='width:100%; max-width:100%;'></iframe>"
 
     return video_embed
 
@@ -90,7 +91,17 @@ def get_answer(podcast: str, question: str):
 
 
 with gr.Blocks() as demo:
-    gr.Markdown("# Welcome to Gradient Dissent QA Bot!")
+    # gr.Markdown("# Welcome to Gradient Dissent QA Bot!")
+    gr.Markdown("<h1><center>Welcome to Gradient Dissent QA Bot 🤖</center></h1>")
+    gr.Markdown(
+        "#### The purpose of this QA bot is to provide answers to questions related to podcast episodes from Weights & Biases' [Gradient Dissent Podcast](https://www.youtube.com/playlist?list=PLD80i8An1OEEb1jP0sjEyiLG8ULRXFob_)."
+    )
+    gr.Markdown(
+        "#### First select a podcast episode and click `Get Podcast Info` to get the summary and possible questions about the podcast episode."
+    )
+    gr.Markdown(
+        "#### Then ask a question about the podcast episode and click `Get Answer` to get the answer."
+    )
 
     with gr.Row():
         with gr.Column(scale=0.5):
