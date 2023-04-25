@@ -22,7 +22,7 @@ artifact_df.download(config.root_data_dir)
 artifact_embeddings = api.artifact(config.transcript_embeddings_artifact)
 chromadb_dir = artifact_embeddings.download(config.root_data_dir / "chromadb")
 
-df_path = artifact_df / "summarized_que_podcasts.csv"
+df_path = config.root_data_dir / "summarized_que_podcasts.csv"
 df = pd.read_csv(df_path)
 
 
