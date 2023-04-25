@@ -91,7 +91,6 @@ def get_answer(podcast: str, question: str):
 
 
 with gr.Blocks() as demo:
-    # gr.Markdown("# Welcome to Gradient Dissent QA Bot!")
     gr.Markdown("<h1><center>Welcome to Gradient Dissent QA Bot 🤖</center></h1>")
     gr.Markdown(
         "#### The purpose of this QA bot is to provide answers to questions related to podcast episodes from Weights & Biases' [Gradient Dissent Podcast](https://www.youtube.com/playlist?list=PLD80i8An1OEEb1jP0sjEyiLG8ULRXFob_)."
