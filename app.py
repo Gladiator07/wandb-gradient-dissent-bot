@@ -104,6 +104,9 @@ with gr.Blocks() as demo:
     gr.Markdown(
         "#### Read the report for understanding how I built this QA bot [here](https://wandb.ai/gladiator/gradient_dissent_qabot/reports/Building-a-Q-A-Bot-for-Weights-Biases-Gradient-Dissent-Podcast--Vmlldzo0MTcyMDQz)"
     )
+    gr.Markdown(
+        "#### GitHub Repo [here](https://github.com/Gladiator07/wandb-gradient-dissent-bot/tree/main)"
+    )
     gr.Markdown("<br>")
 
     with gr.Row():
