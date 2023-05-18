@@ -165,3 +165,4 @@ wandb/
 downloaded_artifacts/
 data/
 quotes_generator/
+.DS_Store
